@@ -1,0 +1,183 @@
+Annotations in Spring are a powerful feature that simplifies the configuration and development process.
+They provide metadata about the code and allow developers to define behaviors, configurations, and dependencies
+more easily. In Spring, annotations help reduce boilerplate code by allowing the framework to handle much of
+the configuration automatically.
+
+Here’s an explanation of key Spring annotations:
+
+1. @Component
+Purpose: Marks a Java class as a Spring-managed component (bean).
+The class annotated with @Component is auto-detected by Spring’s component scanning.
+Usage: Typically used for classes that define business logic or services.
+
+java code
+
+@Component
+public class MyService {
+    public void serve() {
+        System.out.println("Service method called");
+    }
+}
+
+
+2. @Service, @Repository, @Controller
+These are specialized forms of @Component and are used for specific layers in the application.
+
+@Service: Indicates that the class provides business logic or service layer functionality.
+@Repository: Indicates that the class is a DAO (Data Access Object) and interacts with the database. It also enables exception translation to convert database-related exceptions into Spring’s DataAccessException.
+@Controller: Used in the web layer to handle HTTP requests. It's often used in Spring MVC applications to mark classes as web controllers.
+
+java code
+
+@Service
+public class UserService {
+    // Business logic
+}
+
+@Repository
+public class UserRepository {
+    // Data access logic
+}
+
+@Controller
+public class UserController {
+    // Web request handling
+}
+
+3. @Autowired
+Purpose: Automatically injects a bean into another bean (field, setter method, or constructor). Spring will automatically resolve the dependency based on the type.
+Usage: Used for dependency injection (DI).
+
+java code
+
+@Component
+public class OrderService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public void placeOrder() {
+        // use userRepository
+    }
+}
+
+4. @Qualifier
+Purpose: When there are multiple beans of the same type,
+@Qualifier is used to specify which bean to inject.
+Usage: Helps avoid ambiguity in dependency injection.
+
+java code
+
+@Autowired
+@Qualifier("specificBean")
+private MyService myService;
+
+5. @Configuration
+Purpose: Indicates that the class defines one or more @Bean methods,
+which are processed by Spring to generate Spring-managed beans.
+Usage: Used to define beans programmatically,
+often as part of Java-based configuration.
+
+java code
+
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public MyService myService() {
+        return new MyService();
+    }
+}
+
+6. @Bean
+Purpose: Marks a method as a Spring bean, and the returned object will be managed by Spring’s IoC container.
+Usage: Typically used inside a class annotated with @Configuration.
+
+java code
+
+@Bean
+public MyService myService() {
+    return new MyService();
+}
+7. @Scope
+Purpose: Defines the scope of a bean (e.g., singleton, prototype, etc.).
+The default scope is singleton, meaning Spring creates one instance of the bean.
+Usage: Used when you want to change the default scope of a bean.
+
+java code
+
+@Bean
+
+@Scope("prototype")
+public MyService myService() {
+    return new MyService();
+}
+8. @RestController
+Purpose: A convenience annotation that combines @Controller and @ResponseBody. It is used in RESTful web services to return data directly as a response (usually JSON or XML).
+Usage: Used in Spring MVC to define REST API endpoints.
+java
+Copy code
+@RestController
+public class ApiController {
+
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        return userService.getAllUsers();
+    }
+}
+9. @RequestMapping, @GetMapping, @PostMapping
+Purpose: These annotations are used in Spring MVC to map HTTP requests to specific handler methods.
+@RequestMapping: Can map a wide variety of HTTP request methods (GET, POST, PUT, etc.) to a controller method.
+@GetMapping: A shortcut for handling HTTP GET requests.
+@PostMapping: A shortcut for handling HTTP POST requests.
+java
+Copy code
+@Controller
+@RequestMapping("/users")
+public class UserController {
+
+    @GetMapping("/{id}")
+    public String getUser(@PathVariable int id) {
+        // Handle GET request
+    }
+
+    @PostMapping
+    public String createUser(@RequestBody User user) {
+        // Handle POST request
+    }
+}
+10. @RequestParam, @PathVariable, @RequestBody
+@RequestParam: Binds HTTP request parameters to method parameters.
+@PathVariable: Extracts values from URI path segments.
+@RequestBody: Binds the body of the HTTP request to a method parameter.
+java
+Copy code
+@GetMapping("/search")
+public String search(@RequestParam String query) {
+    // query parameter from URL: /search?query=something
+}
+
+@GetMapping("/users/{id}")
+public String getUser(@PathVariable int id) {
+    // id from URL: /users/1
+}
+
+@PostMapping("/users")
+public String createUser(@RequestBody User user) {
+    // Body of POST request is bound to 'user'
+}
+11. @Transactional
+Purpose: Declares that a method or class should be wrapped in a database transaction. It allows Spring to manage transactions automatically.
+Usage: Typically used in service methods that interact with the database.
+java
+Copy code
+@Service
+public class OrderService {
+
+    @Transactional
+    public void placeOrder(Order order) {
+        // Transactional code
+    }
+}
+Conclusion:
+Annotations in Spring make configuration easier, promoting cleaner, more manageable, and readable code. By reducing XML-based configuration and enabling a more declarative style, annotations help developers focus more on the logic than on the setup and configuration.
